@@ -1,0 +1,50 @@
+<div id="supply" class="space-y-4" hx-get="/api/v1/home/supply/" hx-trigger="load, every 10s" hx-swap="outerHTML">
+    <header>
+        <h2 class="sm:text-4xl text-3xl font-bold">🏦 Supply</h3>
+    </header>
+    <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
+        <div class="p-3 p-2.5 bg-gray-800 border border-gray-800 rounded-md">
+            <header>
+                <h3 class="text-sm text-gray-400">Total</h3>
+            </header>
+            <p id="icx-total-supply" class="md:text-xl xl:text-2xl font-mono text-lg font-bold">
+                {{ icx_supply_total }}</p>
+        </div>
+        <div class="p-3 p-2.5 bg-gray-800 border border-gray-800 rounded-md">
+            <header>
+                <h3 class="text-sm text-gray-400">Circulating</h3>
+            </header>
+            <p id="icx-circulating-supply" class="md:text-xl xl:text-2xl font-mono text-lg font-bold">
+                {{ icx_supply_circulating }}</p>
+        </div>
+        <div class="p-3 p-2.5 bg-gray-800 border border-gray-800 rounded-md">
+            <header>
+                <h3 class="text-sm text-gray-400">Staked</h3>
+            </header>
+            <p id="icx-staked-supply" class="md:text-xl xl:text-2xl font-mono text-lg font-bold">
+                {{ icx_supply_staked }}
+            </p>
+        </div>
+        <div class="p-3 p-2.5 bg-gray-800 border border-gray-800 rounded-md">
+            <header>
+                <h3 class="text-sm text-gray-400">Delegated</h3>
+            </header>
+            <p id="icx-delegated-supply" class="md:text-xl xl:text-2xl font-mono text-lg font-bold">
+                {{ icx_supply_delegated }}</p>
+        </div>
+        <div class="p-3 p-2.5 bg-gray-800 border border-gray-800 rounded-md">
+            <header>
+                <h3 class="text-sm text-gray-400">ICA</h3>
+            </header>
+            <p id="icx-organization-supply" class="md:text-xl xl:text-2xl font-mono text-lg font-bold">
+                {{ icx_supply_organization }}</p>
+        </div>
+        <div class="p-3 p-2.5 bg-gray-800 border border-gray-800 rounded-md">
+            <header>
+                <h3 class="text-sm text-gray-400">Liquid Staking (sICX)</h3>
+            </header>
+            <p id="icx-liquid-staking-supply" class="md:text-xl xl:text-2xl font-mono text-lg font-bold">
+                {{ icx_supply_liquid_staking }}</p>
+        </div>
+    </div>
+</div>

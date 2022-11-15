@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block container %}
+{{ address }}
+<div class="space-y-4">
+    <h2 class="text-3xl font-semibold">Recent Transactions</h2>
+    <div class="flex flex-col">
+        <div class="overflow-x-auto">
+            <div class="ring-1 ring-black ring-opacity-5 md:rounded-lg overflow-hidden border border-gray-800 shadow">
+                <table class="min-w-full divide-y divide-gray-800">
+                    <thead class="bg-gray-800">
+                        <tr>
+                            <th scope="col"
+                                class="uppercase whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-50 sm:pl-6">
+                                TX Hash</th>
+                            <th scope="col"
+                                class="uppercase whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-50">
+                                Block</th>
+                            <th scope="col"
+                                class="uppercase whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-50">
+                                Date</th>
+                            <th scope="col"
+                                class="uppercase whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-50">
+                                Transaction</th>
+                            <th scope="col"
+                                class="uppercase whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-50">
+                                Value</th>
+                            <th scope="col"
+                                class="uppercase whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-50">
+                                Fee</th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-gray-800 divide-y divide-gray-800">
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td class="whitespace-nowrap sm:pl-6 py-2 pl-4 pr-3 text-gray-400">
+                                <a href="/transaction/{{ transaction.tx_hash }}"
+                                    class="text-cyan-500 hover:underline"><span
+                                        class="font-mono">{{ transaction.tx_hash[:16] }}</span>...</a>
+                            </td>
+                            <td class="whitespace-nowrap px-2 py-2 text-gray-400">
+                                <span class="font-mono">{{ "{:,}".format_number(transaction.block_number) }}</span>
+                            </td>
+                            <td class="whitespace-nowrap px-2 py-2 text-gray-400"><span
+                                    class="font-mono">{{ transaction.date }}</span>
+                            </td>
+                            <td class="whitespace-nowrap px-2 py-2 text-gray-400">
+                                <!-- Incoming Transactions -->
+                                {% if transaction.to_address == address %}
+                                <a href="/{{ transaction.from_address_type }}/{{ transaction.from_address }}/"
+                                    class="text-cyan-500"><span
+                                        class="font-mono">{{ transaction.from_address[:12] }}</span>...</a>
+                                <span
+                                    class="inline-block bg-green-600 border border-green-500 mx-0.5 px-1 py-0.5 w-9 text-center text-xs text-gray-50 font-bold rounded-md">IN</span>
+                                <span class="font-mono">{{ transaction.to_address[:12] }}</span>...
+                                <!-- Outgoing Transactions -->
+                                {% elif transaction.from_address == address %}
+                                <span class="font-mono">{{ transaction.from_address[:12] }}</span>...
+                                <span
+                                    class="inline-block bg-red-600 border border-red-500 mx-0.5 px-1 py-0.5 w-9 text-center text-xs text-gray-50 font-bold rounded-md">OUT</span>
+                                <a href="/{{ transaction.to_address_type }}/{{ transaction.to_address }}/"
+                                    class="text-cyan-500"><span
+                                        class="font-mono">{{ transaction.to_address[:12] }}</span>...</a>
+                                {% endif %}
+                            </td>
+                            <td class="whitespace-nowrap px-2 py-2 text-gray-400">
+                                <span class="font-mono">{{ transaction.value }} ICX</span>
+                            </td>
+                            <td class="whitespace-nowrap px-2 py-2 text-gray-400">
+                                <span class="font-mono">{{ transaction.transaction_fee }} ICX</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

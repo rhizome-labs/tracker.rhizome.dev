@@ -1,0 +1,201 @@
+{% import "partials/macros/address.html" as address %}
+
+<div id="validators" class="overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+    <header class="flex items-center justify-between px-4 py-2.5 text-sm font-semibold bg-gray-900">
+        <div class="flex items-center gap-1">
+            <h2 class="text-sm font-bold">Validators ({{ validators|length }})</h2>
+            {% include "partials/loading.html" %}
+        </div>
+        <nav class="sm:justify-end flex justify-between gap-2" aria-label="pagination">
+            <div class="bg-gray-900">
+                <div class="relative inline-block text-left">
+                    <button _="on click toggle .hidden on #dropdown-menu" type="button"
+                        class="hover:bg-gray-700 sm:px-4 px-2.5 py-2 bg-gray-800 border border-gray-800 rounded-md text-xs uppercase font-bold"
+                        id="menu-button" aria-expanded="true" aria-haspopup="true">
+                        Sort
+                    </button>
+                    <div id="dropdown-menu"
+                        class="absolute right-0 hidden w-56 mt-4 overflow-hidden origin-top-right bg-gray-800 border border-gray-700 rounded-md shadow-lg"
+                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                        <div>
+                            {% for key in ["Bond", "CPS", "Delegation", "Name", "Power", "Productivity", "Rank", "Rewards"] %}
+                            <button
+                                hx-get="/components/governance/validators/?sort_by={{ key | lower }}&sort_dir={{ sort_dir }}"
+                                hx-trigger="click" hx-target="#validators" hx-swap="outerHTML" hx-indicator="#loading"
+                                type="button"
+                                class="hover:bg-gray-900 hover:text-cyan-500 sm:px-4 block w-full font-bold px-2.5 py-2 text-sm text-left text-gray-400">{{ key }}</button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                {% if sort_dir == "asc" %}
+                {% set reverse_sort_dir = "desc" %}
+                {% set reverse_sort_dir_name = "Desc" %}
+                {% elif sort_dir == "desc" %}
+                {% set reverse_sort_dir = "asc" %}
+                {% set reverse_sort_dir_name = "Asc" %}
+                {% endif %}
+                <button
+                    hx-get="/components/governance/validators/?sort_by={{ sort_by }}&sort_dir={{ reverse_sort_dir }}"
+                    hx-trigger="click" hx-target="#validators" hx-swap="outerHTML" hx-indicator="#loading" type="button"
+                    class="hover:bg-gray-700 sm:px-4 px-2.5 py-2 bg-gray-800 border border-gray-800 rounded-md text-xs uppercase font-bold">{{ reverse_sort_dir_name }}</button>
+            </div>
+        </nav>
+    </header>
+    <div class="flex flex-col">
+        <div class="overflow-x-auto">
+            <div class="inline-block min-w-full align-middle">
+                <div class="ring-1 ring-black ring-opacity-5 overflow-hidden shadow">
+                    <table class="min-w-full text-sm divide-y divide-gray-800 table-auto">
+                        <thead class="bg-black">
+                            <tr class="divide-x divide-gray-800">
+                                <th id="validator-rank" scope="col" class="whitespace-nowrap px-2 py-2 text-center">
+                                    #
+                                </th>
+                                <th id="validator-name" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-left">
+                                    Name
+                                </th>
+                                <th id="validator-cps" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-center">
+                                    <a href="https://cps.icon.community" class="hover:underline">CPS</a>
+                                </th>
+                                <th id="validator-delegation" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-left">
+                                    Delegation
+                                </th>
+                                <th id="validator-power" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-left">
+                                    Power
+                                </th>
+                                <th id="validator-bond" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-left">
+                                    Bond
+                                </th>
+                                <th id="validator-productivity" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-left">
+                                    Productivity
+                                </th>
+                                <th id="validator-productivity" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-left">
+                                    Daily Reward
+                                </th>
+                                <th id="validator-productivity" scope="col"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-left">
+                                    Monthly Reward
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono divide-y divide-gray-800">
+                            {% for validator in validators %}
+
+                            {% if validator.cps_sponsored_projects > 0 %}
+                            {% set name_prefix = "⭐️" %}
+                            {% set avatar_border_color = "border-cyan-600" %}
+                            {% else %}
+                            {% set name_prefix = "" %}
+                            {% set avatar_border_color = "border-gray-800" %}
+                            {% endif %}
+
+                            {% if validator.node_status %}
+                            {% set node_status_styles = "bg-green-500 border-green-600" %}
+                            {% else %}
+                            {% set node_status_styles = "bg-red-500 border-red-600" %}
+                            {% endif %}
+
+                            <tr id="{{ validator.address }}" class="hover:bg-black divide-x divide-gray-800">
+                                <td id="{{ validator.address }}-rank" class="whitespace-nowrap px-2 py-2 text-center">
+                                    {{ loop.index }}</td>
+                                <td id="{{ validator.address }}-name" class="whitespace-nowrap sm:px-4 sm:py-2 px-3">
+                                    <div class="flex flex-row items-center gap-3">
+                                        <div id="{{ validator.address }}-logo" class="relative w-10 h-10">
+                                            <img src="https://cdn-tracker-rhizome-dev.imgix.net/assets/validators/{{ validator.address }}.png?w=90&h=90&auto=format"
+                                                class="border {{ avatar_border_color }} p-0.5 rounded-full" />
+                                            <div
+                                                class="absolute bottom-1 right-0 w-2.5 h-2.5 {{ node_status_styles }} border rounded-full">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p>
+                                                <span class="font-semibold">{{ validator.name }}</span>
+                                                <span class="-ml-0.5">{{ validator.country.formatted|safe }}</span>
+                                            </p>
+                                            <div class="font-mono text-xs text-gray-400">
+                                                {{ address.format(validator.address) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td id="{{ validator.address }}-delegated"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2 text-center">
+                                    {% if validator.cps is true %}
+                                    <p class="text-green-500">
+                                        <span>YES</span>
+                                        {% if validator.cps_sponsored_projects > 0 %}
+                                        <span class="-ml-1">({{ validator.cps_sponsored_projects }})</span>
+                                        {% endif %}
+                                    </p>
+                                    {% else %}
+                                    <p class="text-red-500">NO</p>
+                                    {% endif %}
+                                </td>
+                                <td id="{{ validator.address }}-delegated" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                                    {{ validator.delegated.formatted }} ICX
+                                </td>
+                                <td id="{{ validator.address }}-power" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                                    {{ validator.power.formatted }} ICX
+                                </td>
+                                <td id="{{ validator.address }}-bonded" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                                    {% if validator.bonded_ratio.default != 0 %}
+                                    {% if validator.bonded_ratio.default >= 0.05 %}
+                                    {% set bonded_ratio_text_color = "text-green-500" %}
+                                    {% elif validator.bonded_ratio.default < 0.05 and validator.bonded_ratio.default > 0.04 %}
+                                    {% set bonded_ratio_text_color = "text-yellow-500" %}
+                                    {% elif validator.bonded_ratio.default < 0.04 and validator.bonded_ratio.default > 0.03 %}
+                                    {% set bonded_ratio_text_color = "text-orange-500" %}
+                                    {% elif validator.bonded_ratio.default < 0.03%}
+                                    {% set bonded_ratio_text_color = "text-red-500" %}
+                                    {% endif %}
+                                    {% endif %}
+                                    <p class="{{ bonded_ratio_text_color }}">{{ validator.bonded_ratio.formatted }}</p>
+                                    <p class="text-xs text-gray-400">{{ validator.bonded.formatted }} ICX</p>
+                                </td>
+                                <td id="{{ validator.address }}-productivity"
+                                    class="whitespace-nowrap sm:px-4 px-3 py-2">
+                                    {% if validator.total_blocks.default != 0 %}
+                                    {% if validator.productivity.default > 0.99 %}
+                                    {% set validator_text_color = "text-green-500" %}
+                                    {% elif validator.productivity.default < 0.99 and validator.productivity.default > 0.98%}
+                                    {% set validator_text_color = "text-yellow-500" %}
+                                    {% elif validator.productivity.default < 0.98 and validator.productivity.default > 0.97%}
+                                    {% set validator_text_color = "text-orange-500" %}
+                                    {% elif validator.productivity.default < 0.97%}
+                                    {% set validator_text_color = "text-red-500" %}
+                                    {% endif %}
+                                    {% endif %}
+                                    <p class="{{ validator_text_color }}">{{ validator.productivity.formatted }}</p>
+                                    <p class="text-xs text-gray-400">
+                                        {{ validator.validated_blocks.formatted }}/{{ validator.total_blocks.formatted }}
+                                    </p>
+                                </td>
+                                <td id="{{ validator.address }}-reward" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                                    <p>{{ validator.daily_reward.formatted }} ICX</p>
+                                    <p class="text-xs text-gray-400">({{ validator.daily_reward_usd.formatted }} USD)
+                                    </p>
+                                </td>
+                                <td id="{{ validator.address }}-reward" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                                    <p>{{ validator.monthly_reward.formatted }} ICX</p>
+                                    <p class="text-xs text-gray-400">({{ validator.monthly_reward_usd.formatted }} USD)
+                                    </p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

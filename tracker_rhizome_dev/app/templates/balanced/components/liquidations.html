@@ -1,0 +1,55 @@
+{% import "partials/macros/address.html" as address %}
+{% import "partials/macros/tx_hash.html" as tx_hash %}
+
+<div id="balanced-liquidations" class="border border-gray-800 divide-y divide-gray-800 rounded-md">
+    <header class="flex items-center justify-between px-4 py-2 bg-gray-900">
+        <div class="flex items-center gap-1">
+            <h2 class="text-sm font-bold">Balanced Liquidations</h2>
+            {% include "partials/loading.html" %}
+        </div>
+        <nav class="sm:justify-end flex justify-between gap-2" aria-label="pagination">
+            {% if page > 1%}
+            <button hx-get="/components/balanced/liquidations?page={{ page - 1}}" hx-trigger="click"
+                hx-target="#balanced-liquidations" hx-swap="outerHTML" hx-indicator="#loading" type="button"
+                class="hover:bg-gray-700 sm:px-4 px-2.5 py-2 bg-gray-800 border border-gray-800 rounded-md text-xs uppercase font-bold">Prev</button>
+            {% endif %}
+            <button hx-get="/components/balanced/liquidations?page={{ page + 1}}" hx-trigger="click"
+                hx-target="#balanced-liquidations" hx-swap="outerHTML" hx-indicator="#loading" type="button"
+                class="hover:bg-gray-700 sm:px-4 px-2.5 py-2 bg-gray-800 border border-gray-800 rounded-md text-xs uppercase font-bold">Next</button>
+        </nav>
+    </header>
+    <div class="overflow-x-auto">
+        <div class="inline-block min-w-full align-middle">
+            <div class="ring-1 ring-black ring-opacity-5 md:rounded-lg overflow-hidden shadow">
+                <table class="min-w-full divide-y divide-gray-800">
+                    <thead class="text-sm text-left">
+                        <tr class="divide-x divide-gray-800">
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Address</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Amount</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Date</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Transaction Hash</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        {% for liquidation in liquidations %}
+                        <tr class="divide-x divide-gray-800">
+                            <td class="whitespace-nowrap px-4 py-2 font-mono text-sm text-gray-400">
+                                {{ address.format(liquidation.address) }}
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 font-mono text-sm text-gray-400">
+                                {{ liquidation.amount.formatted }} sICX
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 font-mono text-sm text-gray-400">
+                                {{ liquidation.block_timestamp.formatted }}
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 font-mono text-sm text-gray-400">
+                                {{ tx_hash.format(liquidation.transaction_hash) }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

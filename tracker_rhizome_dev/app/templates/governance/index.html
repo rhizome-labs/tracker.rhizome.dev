@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block container %}
+<div class="flex flex-col gap-4">
+    <div hx-get="/components/governance/iiss-overview/" hx-trigger="load, every 60s"></div>
+    <div hx-get="/components/governance/validators/" hx-trigger="load"></div>
+</div>
+{% endblock %}

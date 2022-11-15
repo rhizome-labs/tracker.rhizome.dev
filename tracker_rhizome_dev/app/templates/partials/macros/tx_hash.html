@@ -1,0 +1,14 @@
+{% macro format(tx_hash) -%}
+<a id="{{ tx_hash }}" class="hover:underline" 
+    _="on load or resize from window
+        if width < 640
+            put '{{ tx_hash[:20] }}...' into me end
+        if width >= 640
+            put '{{ tx_hash[:24] }}...' into me end
+        if width >= 768
+            put '{{ tx_hash[:32] }}...' into me end
+        if width >= 1024
+            put '{{ tx_hash }}' into me end" href="/transaction/{{ tx_hash }}">
+    {{ tx_hash }}
+</a>
+{%- endmacro %}

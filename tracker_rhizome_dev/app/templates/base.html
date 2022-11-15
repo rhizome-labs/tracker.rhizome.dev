@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html _="on load or resize from window set global width to window.innerWidth">
+
+    <head>
+        <!--
+██████╗ ██╗  ██╗██╗███████╗ ██████╗ ███╗   ███╗███████╗
+██╔══██╗██║  ██║██║╚══███╔╝██╔═══██╗████╗ ████║██╔════╝
+██████╔╝███████║██║  ███╔╝ ██║   ██║██╔████╔██║█████╗  
+██╔══██╗██╔══██║██║ ███╔╝  ██║   ██║██║╚██╔╝██║██╔══╝  
+██║  ██║██║  ██║██║███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
+-->
+        <title>{{ title }} | RHIZOME Tracker</title>
+        <meta name="viewport" content="width=device-widt1h, initial-scale=1, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        {% block head_meta %}{% endblock %}
+        <link href="/assets/style.css?v=1" rel="stylesheet">
+        <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
+        <script src="https://unpkg.com/hyperscript.org@0.9.5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@^3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/luxon@^2"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@^1"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+        {% block head_scripts %}{% endblock %}
+    </head>
+
+    <body class="flex flex-col min-h-screen subpixel-antialiased text-gray-100 bg-black">
+        <header class="sm:px-4 flex flex-row items-center justify-between h-10 px-2 bg-black border-b border-gray-800"
+            x-data="{ mobileMenuOpen: false }">
+            <h1 class="text-xl font-bold text-gray-100">
+                <a href="/">RHIZOME</a>
+            </h1>
+            <button _="on click toggle .fixed on #nav-menu then remove .hidden from #nav-menu">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <div id="nav-menu" class="top-0 left-0 z-30 hidden w-full h-screen overflow-y-auto bg-black">
+                <header
+                    class="sm:px-4 flex flex-row items-center justify-between h-10 px-2 bg-black border-b border-gray-800">
+                    <h1 class="text-xl font-bold">
+                        <a href="/" class="hover:underline">RHIZOME</a>
+                    </h1>
+                    <button _="on click toggle .hidden on #nav-menu then remove .fixed from #nav-menu ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </header>
+                <div class="flex flex-col items-center py-8 space-y-8">
+                    <nav class="flex flex-col items-center justify-center h-full text-center divide-y">
+                        <ul class="flex flex-col gap-3 text-gray-300 lowercase">
+                            <li>
+                                <a href="/transactions/" class="hover:underline">TX</a>
+                            </li>
+                            <li>
+                                <a href="/contracts/" class="hover:underline">Contracts</a>
+                            </li>
+                            <li>
+                                <a href="/governance/" class="hover:underline">Gov</a>
+                            </li>
+                            <li>
+                                <a href="/build/" class="hover:underline">Build</a>
+                            </li>
+                            <li>
+                                <a href="/dapps/balanced/" class="hover:underline">Balanced</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <main class="flex flex-col flex-1 w-full gap-3 p-3 overflow-y-auto">
+            <div hx-get="/components/home/block-stream/?limit=50" hx-trigger="load, every 2s" _="
+        on load or resize from window
+            set :count to (width / 80) as an Int then
+            set @hx-get to '/components/home/block-stream/?limit='+:count">
+            </div>
+            {% block container %}{% endblock %}
+        </main>
+    </body>
+
+</html>

@@ -1,0 +1,65 @@
+<div id="{{ chart_id }}" class="overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+  <header class="flex items-center justify-between px-4 py-2.5 text-sm">
+    <h2 class="font-mono">bnUSD/USD (7d)</h2>
+  </header>
+  <div class="p-4">
+    <canvas id="chart-{{ chart_id }}" class="w-full"></canvas>
+  </div>
+  <script>
+    new Chart(document.getElementById('chart-{{ chart_id }}'),
+      {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: "ICX/USD Price",
+              backgroundColor: 'transparent',
+              borderColor: 'cyan',
+              borderWidth: 2,
+              data: {{ quotes | safe }},
+            }
+          ]
+        },
+        options: {
+      plugins: {
+        legend: {
+          display: false
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            color: 'grey',
+            display: true,
+            drawBorder: true,
+            drawOnChartArea: true,
+            drawTicks: true,
+          },
+          type: 'time',
+          time: {
+            unit: 'day',
+          },
+          title: {
+            display: false,
+            text: 'Date'
+          },
+        },
+        y: {
+          grid: {
+            color: 'grey',
+            display: true,
+            drawBorder: true,
+            drawOnChartArea: true,
+            drawTicks: true,
+          },
+          title: {
+            display: false,
+            text: 'Price'
+          },
+        },
+      }
+    }
+      }
+    );
+  </script>
+</div>

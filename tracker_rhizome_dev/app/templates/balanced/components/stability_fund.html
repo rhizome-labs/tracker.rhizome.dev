@@ -1,0 +1,19 @@
+<div class="overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+      <header class="flex items-center justify-between px-4 py-2.5 text-sm bg-gray-900">
+        <h2 class="font-mono">Stability Fund</h2>
+        <button onclick="window.location='/contract/cxa09dbb60dcb62fffbd232b6eae132d730a2aafa6/';">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+    </header>
+    <ul class="p-4">
+        {% for asset in stability_fund %}
+        <li>
+            <span class="-mr-1">{{ asset[1] }}</span>
+            <span class="text-sm text-gray-400">{{ asset[0] }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

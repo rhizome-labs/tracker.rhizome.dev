@@ -1,0 +1,22 @@
+<div id="logs" class=" w-full overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+    {% with title="Logs" %}
+    {% include "partials/component_header.html" %}
+    {% endwith %}
+    <div class="w-full divide-y divide-gray-800">
+        {% for log in logs %}
+        <div class="flex flex-row justify-between w-full gap-4 p-4">
+            <ul>
+                <li>
+                    <p class="font-mono break-all"><a href="/contract/{{ log.address }}/"
+                            class="text-cyan-500 hover:underline text-sm">{{ log.address }}</a></p>
+                    {% if log.data.default %}
+                    <p class="font-mono text-sm break-all">{{ log.data.default }}</p>
+                    {% endif %}
+                    <p class="font-mono text-sm break-all">{{ log.indexed }}</p>
+                </li>
+            </ul>
+            <p class="text-sm text-gray-400">#{{ log.log_index }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>

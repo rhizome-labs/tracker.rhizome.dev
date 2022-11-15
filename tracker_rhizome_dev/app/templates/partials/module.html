@@ -1,0 +1,8 @@
+<div id="{{ id }}" class="grow shrink-0 p-3 bg-gray-900 border border-gray-800 rounded-lg">
+    <header>
+        <h2 class="text-sm font-bold text-gray-400 uppercase">{{ title }}</h2>
+    </header>
+    <p class="lg:text-2xl text-xl">
+        {{ body }}{% if body_suffix %}<span class="md:text-lg text-base text-gray-400">{{ body_suffix }}</span>{% endif %}
+    </p>
+</div>

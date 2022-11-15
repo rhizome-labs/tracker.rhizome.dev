@@ -1,0 +1,55 @@
+<div id="commits" class="overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg"
+    x-start-timestamp="{{ start_timestamp }}" x-end-timestamp="{{ end_timestamp }}">
+    <header class="flex items-center justify-between px-4 py-2.5 text-sm font-semibold bg-gray-900">
+        <h2>Commits 30d ({{ commits | length }})</h2>
+        <button _="
+        on click
+        toggle .hidden on #commits-feed then
+        toggle .rotate-180 on me
+        " id="commits-feed-dropdown" class="transform rotate-180">▼</button>
+    </header>
+    <div id="commits-feed" class="flex flex-col divide-y divide-gray-800">
+        {% for commit in commits %}
+        <div class="p-4 mb-px space-y-3">
+            <header class="items-top flex justify-between space-x-4">
+                <div class="grow flex flex-row items-center gap-3">
+                    <a href="https://github.com/{{ commit.author_username }}">
+                        <img src="https://avatars.githubusercontent.com/u/{{ commit.author_id }}"
+                            class="w-9 h-9 rounded-full" loading="lazy" />
+                    </a>
+                    <div>
+                        <h3 class="font-sans text-lg font-semibold leading-snug">
+                            {% if commit.author_username %}
+                            <a href="https://github.com/{{ commit.author_username }}"
+                                class="hover:underline">{{ commit.author_username }}</a>
+                            {% else %}
+                            {{ commit.author_name }}
+                            {% endif %}
+                        </h3>
+                        <p class="text-sm text-gray-400">
+                            <time class="font-mono">{{ commit.date }}</time>
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <span class="font-mono text-sm text-green-500">{{ commit.changes_additions }}++</span>
+                    <span class="font-mono text-sm text-red-500">{{ commit.changes_deletions }}--</span>
+                </div>
+            </header>
+            <div id="commit-{{ commit.id }}-message">
+                <p class="text-sm text-gray-400 break-words">{{ commit.message }}</p>
+            </div>
+            <div id="commit-{{ commit.id }}-metadata"
+                class="lg:space-x-6 flex items-baseline justify-between space-x-4 text-sm">
+                <p>
+                    <a href="https://github.com/{{ commit.owner_name }}/{{ commit.repo_name}}"
+                        class="hover:underline text-cyan-500 font-mono">{{ commit.repo_name }}</a>
+                </p>
+                <a href="https://github.com/{{ commit.owner_name }}/{{ commit.repo_name}}/commit/{{ commit.id }}"
+                    class="hover:underline text-cyan-500 font-mono">{{ commit.id[:8] }}
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

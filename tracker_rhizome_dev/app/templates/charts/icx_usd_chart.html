@@ -1,0 +1,67 @@
+<div id="{{ chart_id }}">
+  <div class="border border-gray-800 divide-y divide-gray-800">
+    <header class="p-2">
+      <h2 class="font-mono font-bold">{{ chart_title }}</h2>
+    </header>
+    <div class="p-2">
+      <canvas id="chart-{{ chart_id }}" class="w-full"></canvas>
+    </div>
+  </div>
+  <script>
+    new Chart(document.getElementById('chart-{{ chart_id }}'),
+      {
+        type: 'line',
+        data: {
+          datasets: [
+            {
+              label: "ICX/USD Price",
+              backgroundColor: 'transparent',
+              borderColor: 'cyan',
+              borderWidth: 2,
+              data: {{ data | safe }},
+            }
+          ]
+        },
+        options: {
+      plugins: {
+        legend: {
+          display: false
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            color: 'grey',
+            display: true,
+            drawBorder: true,
+            drawOnChartArea: true,
+            drawTicks: true,
+          },
+          type: 'time',
+          time: {
+            unit: 'day',
+          },
+          title: {
+            display: false,
+            text: 'Date'
+          },
+        },
+        y: {
+          grid: {
+            color: 'grey',
+            display: true,
+            drawBorder: true,
+            drawOnChartArea: true,
+            drawTicks: true,
+          },
+          title: {
+            display: false,
+            text: 'Price'
+          },
+        },
+      }
+    }
+      }
+    );
+  </script>
+</div>

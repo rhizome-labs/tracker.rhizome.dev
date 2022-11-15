@@ -1,0 +1,12 @@
+{% if service_status == 1 %}
+{% set bg_color = "bg-green-500" %}
+{% set text = "connected" %}
+{% else %}
+{% set bg_color = "bg-red-500" %}
+{% set text = "error" %}
+{% endif %}
+
+<div class="flex items-center gap-2">
+    <div class="w-2.5 h-2.5 {{ bg_color }} rounded-full"></div>
+    <span class="text-gray-400">{{ text }}</span>
+</div>

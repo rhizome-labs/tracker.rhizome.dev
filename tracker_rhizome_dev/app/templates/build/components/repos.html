@@ -1,0 +1,45 @@
+<div id="tracked-repos" class="overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+    <header class="flex items-center justify-between bg-gray-900 px-4 py-2.5 text-sm font-semibold">
+        <h2>Tracked Repos ({{ repos|length }})</h2>
+        <button _="
+        on click
+        toggle .hidden on #repos-grid then
+        toggle .rotate-180 on me
+        " id="tracked-repos-dropdown" class="transform rotate-180">▼</button>
+    </header>
+    <div class="flex flex-wrap gap-1.5 sm:gap-2 px-4 py-2">
+        <button hx-get="/components/build/repos/" hx-target="#tracked-repos" hx-swap="outerHTML"
+            class="bg-cyan-700 hover:bg-cyan-800 p-2 text-xs font-semibold lowercase rounded-md">All</button>
+        {% for owner in owners %}
+        <button hx-get="/components/build/repos/?owner_name={{ owner | lower }}" hx-target="#tracked-repos"
+            hx-swap="outerHTML"
+            class="bg-cyan-700 hover:bg-cyan-800 p-2 text-xs font-semibold lowercase rounded-md">{{ owner | lower }}</button>
+        {% endfor %}
+    </div>
+    <div id="repos-grid" class="lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid grid-cols-1 gap-px">
+        {% for repo in repos %}
+        <div id="repo-{{ repo.id }}" x-repo-owner="{{ repo.owner_name }}"
+            class="{{ repo.owner_name }} outline outline-1 outline-gray-800 h-full gap-px p-4 space-y-2">
+            <header class="">
+                <div>
+                    <h3 class="font-sans text-lg font-semibold leading-snug">
+                        <a href="https://github.com/{{ repo.owner_name }}/{{ repo.name }}/" class="hover:underline">
+                            {{ repo.name }}
+                        </a>
+                    </h3>
+                </div>
+                <div class="flex gap-2">
+                    {% if repo.language %}
+                    <p class="text-sm text-gray-400">{{ repo.language | lower }}</p>
+                    {% endif %}
+                </div>
+            </header>
+            <div>
+                <p class="text-sm text-gray-400">💻 <a href="https://github.com/{{ repo.owner_name }}"
+                        class="hover:underline">{{ repo.owner_name }}</a></p>
+                <p class="text-sm text-gray-400">🔁 {{ repo.updated_at }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

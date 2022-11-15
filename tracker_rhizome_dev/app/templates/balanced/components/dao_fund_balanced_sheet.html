@@ -1,0 +1,19 @@
+<div class="w-full overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+      <header class="flex items-center justify-between px-4 py-2.5 text-sm bg-gray-900">
+        <h2 class="font-mono">DAO Fund</h2>
+        <button onclick="window.location='/contract/cx835b300dcfe01f0bdb794e134a0c5628384f4367/';">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+    </header>
+    <ul class="p-4">
+        {% for asset in assets %}
+        <li>
+            <span class="-mr-1">{{ asset.amount }}</span>
+            <span class="text-sm text-gray-400">{{ asset.symbol }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

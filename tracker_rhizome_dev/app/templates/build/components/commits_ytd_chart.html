@@ -1,0 +1,71 @@
+<div id="commits-ytd"
+    class="overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+    <header class="flex items-center justify-between px-4 py-2.5 text-sm font-semibold bg-gray-900">
+        <h2>Commits YTD ({{ total_commits }})</h2>
+        <button _="
+        on click
+            toggle .hidden on #commits-chart-container then
+            toggle .rotate-180 on me
+        " id="commits-feed-dropdown" class="transform rotate-180">▼</button>
+    </header>
+    <div id="commits-chart-container">
+        <canvas id="commits-chart" class="w-full p-4"></canvas>
+    </div>
+    <script>
+        new Chart(document.getElementById('commits-chart'),
+          {
+            type: 'line',
+            data: {
+              datasets: [
+                {
+                  label: "Commits",
+                  backgroundColor: 'transparent',
+                  borderColor: 'cyan',
+                  borderWidth: 2,
+                  data: {{ data | safe }},
+                }
+              ]
+            },
+            options: {
+          plugins: {
+            legend: {
+              display: false
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                color: 'grey',
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: true,
+                drawTicks: true,
+              },
+              type: 'time',
+              time: {
+                unit: 'month',
+              },
+              title: {
+                display: false,
+                text: 'Date'
+              },
+            },
+            y: {
+              grid: {
+                color: 'grey',
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: true,
+                drawTicks: true,
+              },
+              title: {
+                display: false,
+                text: 'Price'
+              },
+            },
+          }
+        }
+          }
+        );
+      </script>
+</div>

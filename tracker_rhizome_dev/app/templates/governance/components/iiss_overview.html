@@ -1,0 +1,56 @@
+<div class="lg:flex flex gap-3 overflow-x-auto">
+    <div class="shrink-0 grow grid grid-cols-2 gap-3">
+        {% with id="staked-icx", title="Staked ICX", body=total_staked_icx, body_suffix=" ICX" %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+
+        {% with id="delegated-icx", title="Delegated ICX", body=total_delegated_icx, body_suffix=" ICX" %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+
+        {% with id="bonded-icx", title="Bonded ICX", body=total_bonded_icx, body_suffix=" ICX" %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+
+        {% with id="power", title="Power", body=total_power, body_suffix=" ICX" %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+    </div>
+    <div class="shrink-0 grow flex flex-col gap-3">
+        {% with id="main-validator-count", title="Main Validators", body=main_validator_count %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+
+        {% with id="sub-validator-count", title="Sub Validators", body=sub_validator_count %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+    </div>
+    <div class="shrink-0 grow flex flex-col gap-3">
+        {% with id="bond-requirement", title="Bond Req.", body=bond_requirement %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+
+        {% with id="average-bond", title="Avg. Bond", body=average_bond, body_suffix=" ICX" %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+    </div>
+    <div class="shrink-0 grow flex flex-col gap-3">
+        {% with id="i-global", title="I_global", body=i_global, body_suffix=" ICX" %}
+        {% include "partials/module.html" %}
+        {% endwith %}
+        <div class="grow shrink-0 flex gap-3">
+            {% with id="i-cps", title="I_cps", body=i_cps, body_suffix="%" %}
+            {% include "partials/module.html" %}
+            {% endwith %}
+            {% with id="i-prep", title="I_prep", body=i_prep, body_suffix="%" %}
+            {% include "partials/module.html" %}
+            {% endwith %}
+            {% with id="i-relay", title="I_relay", body=i_relay, body_suffix="%" %}
+            {% include "partials/module.html" %}
+            {% endwith %}
+            {% with id="i-voter", title="I_voter", body=i_voter, body_suffix="%" %}
+            {% include "partials/module.html" %}
+            {% endwith %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block container %}
+<div id="container">
+
+    <div hx-get="/components/address-book/" hx-vals="" hx-trigger="load delay:50ms" hx-target="this"
+        _="on load
+           set addressBook to localStorage.rhizomeTrackerAddressBook
+           set @hx-vals to addressBook">
+            
+    <form id="address-book-registration-form" class="w-96 flex flex-col gap-4 mx-auto" hx-post="/components/address-book/">
+        <input type="text" id="icx-address" name="icx-address" placeholder="ICX Address"
+            class="p-4 bg-gray-900 border border-gray-800">
+        <input type="text" id="name" name="name" placeholder="Name" class="p-4 bg-gray-900 border border-gray-800">
+        <input type="hidden" id="address-book" name="address-book" value="">
+        <button class="hover:bg-cyan-800 hover:border-cyan-700 p-4 font-bold bg-gray-900 border border-gray-800">
+            Register Address
+        </button>
+    </form>
+
+</div>
+{% endblock %}

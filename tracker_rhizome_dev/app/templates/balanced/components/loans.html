@@ -1,0 +1,128 @@
+{% import "partials/macros/address.html" as address %}
+
+<div id="balanced-loans" class="border border-gray-800 divide-y divide-gray-800 rounded-md">
+    <header class="flex items-center justify-between px-4 py-2 bg-gray-900">
+        <div class="flex items-center gap-1">
+            <h2 class="text-sm font-bold">Balanced Loans ({{ loan_count }})</h2>
+            {% include "partials/loading.html" %}
+        </div>
+        <nav class="sm:justify-end flex justify-between gap-2" aria-label="pagination">
+            <div class="bg-gray-900">
+                <div class="relative inline-block text-left">
+                    <button _="on click toggle .hidden on #dropdown-menu" type="button"
+                        class="hover:bg-gray-700 sm:px-4 px-2.5 py-2 bg-gray-800 border border-gray-800 rounded-md text-xs uppercase font-bold"
+                        id="menu-button" aria-expanded="true" aria-haspopup="true">
+                        Sort
+                    </button>
+                    <div id="dropdown-menu"
+                        class="absolute right-0 hidden w-56 mt-4 overflow-hidden origin-top-right bg-gray-800 border border-gray-700 rounded-md shadow-lg"
+                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                        <div>
+                            <button
+                                hx-get="/components/balanced/loans/?sort_by=id&sort_dir={{ sort_dir }}&show_liquidated={{ show_liquidated }}"
+                                hx-trigger="click" hx-target="#balanced-loans" hx-swap="outerHTML"
+                                hx-indicator="#loading" type="button"
+                                class="hover:bg-gray-900 hover:text-cyan-500 sm:px-4 block w-full font-bold px-2.5 py-2 text-sm text-left text-gray-400">ID</button>
+                            <button
+                                hx-get="/components/balanced/loans/?sort_by=ratio&sort_dir={{ sort_dir }}&show_liquidated={{ show_liquidated }}"
+                                hx-trigger="click" hx-target="#balanced-loans" hx-swap="outerHTML"
+                                hx-indicator="#loading" type="button"
+                                class="hover:bg-gray-900 hover:text-cyan-500 sm:px-4 block w-full font-bold px-2.5 py-2 text-sm text-left text-gray-400">Ratio</button>
+                            <button
+                                hx-get="/components/balanced/loans/?sort_by=collateral&sort_dir={{ sort_dir }}&show_liquidated={{ show_liquidated }}"
+                                hx-trigger="click" hx-target="#balanced-loans" hx-swap="outerHTML"
+                                hx-indicator="#loading" type="button"
+                                class="hover:bg-gray-900 hover:text-cyan-500 sm:px-4 block w-full font-bold px-2.5 py-2 text-sm text-left text-gray-400">Collateral</button>
+                            <button
+                                hx-get="/components/balanced/loans/?sort_by=debt&sort_dir={{ sort_dir }}&show_liquidated={{ show_liquidated }}"
+                                hx-trigger="click" hx-target="#balanced-loans" hx-swap="outerHTML"
+                                hx-indicator="#loading" type="button"
+                                class="hover:bg-gray-900 hover:text-cyan-500 sm:px-4 block w-full font-bold px-2.5 py-2 text-sm text-left text-gray-400">Debt</button>
+                            <button
+                                hx-get="/components/balanced/loans/?sort_by=date&sort_dir={{ sort_dir }}&show_liquidated={{ show_liquidated }}"
+                                hx-trigger="click" hx-target="#balanced-loans" hx-swap="outerHTML"
+                                hx-indicator="#loading" type="button"
+                                class="hover:bg-gray-900 hover:text-cyan-500 sm:px-4 block w-full font-bold px-2.5 py-2 text-sm text-left text-gray-400">Date</button>
+                            {% if show_liquidated %}
+                            <button
+                                hx-get="/components/balanced/loans/?sort_by=status&sort_dir={{ sort_dir }}&show_liquidated={{ show_liquidated }}"
+                                hx-trigger="click" hx-target="#balanced-loans" hx-swap="outerHTML"
+                                hx-indicator="#loading" type="button"
+                                class="hover:bg-gray-900 hover:text-cyan-500 sm:px-4 block w-full font-bold px-2.5 py-2 text-sm text-left text-gray-400">Status</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                {% if sort_dir == "asc" %}
+                {% set reverse_sort_dir = "desc" %}
+                {% set reverse_sort_dir_name = "Desc" %}
+                {% elif sort_dir == "desc" %}
+                {% set reverse_sort_dir = "asc" %}
+                {% set reverse_sort_dir_name = "Asc" %}
+                {% endif %}
+                <button
+                    hx-get="/components/balanced/loans/?sort_by={{ sort_by }}&sort_dir={{ reverse_sort_dir }}&show_liquidated={{ show_liquidated }}"
+                    hx-trigger="click" hx-target="#balanced-loans" hx-swap="outerHTML" hx-indicator="#loading"
+                    type="button"
+                    class="hover:bg-gray-700 sm:px-4 px-2.5 py-2 bg-gray-800 border border-gray-800 rounded-md text-xs uppercase font-bold">{{ reverse_sort_dir_name }}</button>
+            </div>
+        </nav>
+    </header>
+    <div class="overflow-x-auto">
+        <div class="inline-block min-w-full align-middle">
+            <div class="ring-1 ring-black ring-opacity-5 md:rounded-lg overflow-hidden shadow">
+                <table class="min-w-full divide-y divide-gray-800">
+                    <thead class="text-sm text-left">
+                        <tr class="divide-x divide-gray-800">
+                            <th scope="col" class="whitespace-nowrap w-8 px-4 py-2 text-sm text-center">ID</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Address</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Ratio</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Collateral</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Debt</th>
+                            <th scope="col" class="whitespace-nowrap px-4 py-2 text-sm">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        {% for loan in loans %}
+                        <tr class="divide-x divide-gray-800 {{ cell_bg }}">
+                            <td class="whitespace-nowrap w-8 px-4 py-2 text-sm text-center text-gray-400">
+                                <span class="font-mono text-sm">{{ loan.id.formatted }}</span>
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 text-sm text-gray-400">
+                                <span class="font-mono">{{ address.format(loan.address) }}</span>
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 text-sm text-gray-400">
+                                {% if loan.ratio.raw >= 2.5 %}
+                                {% set ratio_text_color = "text-green-500" %}
+                                {% endif %}
+                                {% if loan.ratio.raw < 2.5 %}
+                                {% set ratio_text_color = "text-yellow-500" %}
+                                {% endif %}
+                                {% if loan.ratio.raw < 2 %}
+                                {% set ratio_text_color = "text-orange-500" %}
+                                {% endif %}
+                                {% if loan.ratio.raw < 1.5 %}
+                                {% set ratio_text_color = "text-red-500" %}
+                                {% endif %}
+                                <span class="font-mono {{ ratio_text_color }}">{{ loan.ratio.formatted }}</span>
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 text-sm text-gray-400">
+                                <span class="font-mono">{{ loan.collateral.formatted }} sICX</span>
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 text-sm text-gray-400">
+                                <span class="font-mono">{{ loan.total_debt.formatted }} bnUSD</span>
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 text-sm text-gray-400">
+                                <span class="font-mono">{{ loan.created }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block container %}
+<div id="container" class="flex flex-col gap-4">
+    <div class="sm:flex grid flex-row justify-between w-full grid-cols-2 gap-3 overflow-x-auto">
+        <div class="grow shrink-0" hx-get="/components/icx/icx-usd-price/" hx-trigger="load, every 30s"></div>
+        <div class="grow shrink-0" hx-get="/components/icx/average-block-time/" hx-trigger="load, every 30s"></div>
+        <div class="grow shrink-0" hx-get="/components/icx/total-transactions/" hx-trigger="load, every 5s"></div>
+        <div class="grow shrink-0" hx-get="/components/icx/total-token-transfers/" hx-trigger="load, every 5s"></div>
+    </div>
+</div>
+{% endblock %}

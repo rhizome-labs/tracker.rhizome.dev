@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block container %}
+<div id="container">
+    <div id="contracts" hx-get="/components/contracts/?page={{ page }}&limit={{ limit }}" hx-trigger="load" hx-swap="outerHTML"></div>
+</div>
+{% endblock %}

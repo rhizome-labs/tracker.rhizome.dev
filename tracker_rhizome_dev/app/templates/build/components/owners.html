@@ -1,0 +1,12 @@
+<div id="owners" class="overflow-hidden bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg">
+    <header class="flex items-center justify-between px-4 py-2.5 text-sm font-semibold bg-black">
+        <h2>Repo Owners</h2>
+    </header>
+    <div class="grid grid-cols-5 p-4">
+        {% for owner in owners %}
+        <div>
+            <img src="https://github.com/{{ owner }}.png" class="w-16 h-16 rounded-full" />
+        </div>
+        {% endfor %}
+    </div>
+</div>

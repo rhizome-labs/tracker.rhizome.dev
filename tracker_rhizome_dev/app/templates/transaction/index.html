@@ -1,0 +1,167 @@
+{% import "partials/macros/address.html" as address %}
+
+{% extends "base.html" %}
+
+{% block container %}
+
+<div class="flex flex-col gap-4">
+
+    <div id="transaction"
+        class="md:col-span-7 w-full min-h-full overflow-hidden border border-gray-800 divide-y divide-gray-800 rounded-lg">
+        {% with title="Transaction" %}
+        {% include "partials/component_header.html" %}
+        {% endwith %}
+        <div class="w-full overflow-x-scroll">
+            <table class="w-full table-auto">
+                <tbody class="text-left divide-y divide-gray-800">
+
+                    <!-- Only show transaction summary if tx_summary is not None -->
+                    {% if tx_summary %}
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Summary</td>
+                        <td class="md:px-4 px-3 py-2 font-mono text-sm bg-black">
+                            <p class="max-w-3xl">
+                                {{ tx_summary }}
+                            </p>
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    <!-- Transaction Hash -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Tx Hash</td>
+                        <td class="md:px-4 px-3 py-2 font-mono bg-black">{{ tx_hash }}</td>
+                    </tr>
+
+                    <!-- Transaction Status -->
+                    <tr class="divide-x divide-gray-800">
+                        {% if transaction.status == 1 %}
+                        {% set transaction_status = "Success" %}
+                        {% set transaction_bg_color = "green" %}
+                        {% else %}
+                        {% set transaction_status = "Fail" %}
+                        {% set transaction_bg_color = "red" %}
+                        {% endif %}
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Status</td>
+                        <td class="md:px-4 flex flex-row items-center gap-2 px-3 py-2 bg-black">
+                            <div
+                                class="w-2.5 rounded-full h-2.5 bg-{{ transaction_bg_color }}-500 border-{{ transaction_bg_color }}-400 border">
+                            </div>
+                            <span class="uppercase">{{ transaction_status }}</span>
+                        </td>
+                    </tr>
+
+                    <!-- Block Height -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Block Height</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">
+                            <span>
+                                {{ transaction.block_number.formatted }}
+                            </span>
+                            <span
+                                hx-get="/components/transaction/confirmations/?tx_block_height={{ transaction.block_number.default }}"
+                                hx-trigger="load, every 5s" class="text-xs text-gray-400">
+                                ({{ transaction.confirmations.formatted }} confirmations)
+                            </span>
+                        </td>
+                    </tr>
+
+                    <!-- Block Timestamp -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Timestamp</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">{{ transaction.block_timestamp.formatted }}</td>
+                    </tr>
+
+                    <!-- Transaction Type -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Type</td>
+                        <td class="md:px-4 px-3 py-2 text-gray-400 bg-black">{{ transaction.data_type }}</td>
+                    </tr>
+
+                    <!-- From Address -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">From</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">
+                            {% if transaction.from_address is none %}
+                            <span>-</span>
+                            {% else %}
+                            {% if transaction.from_address[:2] == "hx" %}
+                            <a href="/address/{{ transaction.from_address }}"
+                                class="hover:underline text-cyan-500 font-mono">
+                                {{ address.format(transaction.from_address) }}
+                            </a>
+                            {% elif transaction.from_address[:2] == "cx" %}
+                            <a href="/contract/{{ transaction.from_address }}"
+                                class="hover:underline text-cyan-500 font-mono">
+                                {{ address.format(transaction.from_address) }}
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <!-- To Address -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">To</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">
+                            {% if transaction.to_address is none %}
+                            <span>-</span>
+                            {% else %}
+                            {% if transaction.to_address[:2] == "hx" %}
+                            <a href="/address/{{ transaction.to_address }}"
+                                class="hover:underline text-cyan-500 font-mono">{{ address.format(transaction.to_address) }}</a>
+                            {% elif transaction.to_address[:2] == "cx" %}
+                            <a href="/contract/{{ transaction.to_address }}"
+                                class="hover:underline text-cyan-500 font-mono">{{ address.format(transaction.to_address) }}</a>
+                            {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <!-- Transaction Amount -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Amount</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">{{ transaction.value.formatted }} ICX</td>
+                    </tr>
+
+                    <!-- Step Price -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Step Price</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">
+                            <span class="text-gray-400">{{ transaction.step_price.formatted }} ICX</span>
+                        </td>
+                    </tr>
+
+                    <!-- Step Limit -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Step Limit</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">
+                            <span class="text-gray-400">{{ transaction.step_limit.formatted }} Steps</span>
+                        </td>
+                    </tr>
+
+                    <!-- Transaction Fee -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Tx Fee</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">{{ transaction.transaction_fee.formatted }} ICX
+                        </td>
+                    </tr>
+
+                    <!-- Transaction Data -->
+                    <tr class="divide-x divide-gray-800">
+                        <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Data</td>
+                        <td class="md:px-4 px-3 py-2 bg-black">
+                            <pre><code class="language-json text-sm text-gray-400">{{ transaction.data.formatted }}</code></pre>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="md:col-span-5">
+        <div hx-get="/components/transaction/logs/{{ tx_hash }}/" hx-trigger="load"></div>
+    </div>
+</div>
+{% endblock %}

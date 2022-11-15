@@ -1,0 +1,19 @@
+<div class="lg:flex flex gap-3 overflow-x-auto">
+
+    {% with id="borrower-count", title="Borrowers", body=loan_count %}
+    {% include "partials/module.html" %}
+    {% endwith %}
+
+    {% with id="total-collateral", title="Collateral", body=total_collateral, body_suffix=" sICX" %}
+    {% include "partials/module.html" %}
+    {% endwith %}
+
+    {% with id="mean-ratio", title="Mean Ratio", body=mean_ratio %}
+    {% include "partials/module.html" %}
+    {% endwith %}
+
+    {% with id="max-ratio", title="Max Ratio", body=max_ratio %}
+    {% include "partials/module.html" %}
+    {% endwith %}
+
+</div>

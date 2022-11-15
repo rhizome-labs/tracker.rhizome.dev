@@ -1,0 +1,36 @@
+<div id="latest-transactions" class="bg-black border border-gray-800 divide-y divide-gray-800 rounded-lg"
+    hx-get="/components/home/latest-transactions/?limit=20" hx-trigger="load delay:2s" hx-swap="outerHTML">
+    <header class="px-4 py-2">
+        <h2 class="font-semibold">Latest Tx</h2>
+    </header>
+    <div class="py-2 overflow-x-auto">
+        <table class="w-full text-sm table-auto">
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td class="whitespace-nowrap px-4 py-0.5">
+                        <a href="/transaction/{{ transaction.hash }}" class="hover:underline">
+                            {{ transaction.hash[:4] }}...{{ transaction.hash[-4:] }}
+                        </a>
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-0.5">{{ transaction.block_timestamp.relative }}</td>
+                    <td class="whitespace-nowrap px-4 py-0.5">
+                        {% if transaction.value == 0 %}
+                        -
+                        {% else %}
+                        {{ transaction.value }} ICX
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-0.5">
+                        {% if transaction.method %}
+                        {{ transaction.method }}
+                        {% else %}
+                        -
+                        {% endif%}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
