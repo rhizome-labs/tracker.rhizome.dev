@@ -5,6 +5,7 @@ from itertools import groupby
 
 from fastapi import APIRouter, HTTPException, Query, Request, status
 from fastapi.responses import HTMLResponse
+
 from tracker_rhizome_dev import (
     ENV,
     GITHUB_IGNORED_REPO_IDS,
@@ -138,7 +139,7 @@ async def get_owners(request: Request):
 async def get_repos(request: Request, owner_name: str = Query(default=None)):
     if owner_name is not None:
         # Raise error if owner_name is not in tracked usernames
-        if owner_name.lower() not in GITHUB_USERNAMES:
+        if owner_name.casefold() not in GITHUB_USERNAMES:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=f"Sorry, {owner_name} could not be found. Valid owner names are {', '.join(GITHUB_USERNAMES)}.",
@@ -146,7 +147,7 @@ async def get_repos(request: Request, owner_name: str = Query(default=None)):
         # If owner name is valid, query database for repos belonging to that user
         else:
             repos = await Db_GithubRepo.find(
-                Db_GithubRepo.owner_name == owner_name.lower()
+                Db_GithubRepo.owner_name == owner_name.casefold()
             ).to_list()
     # If owner_name is None, query for all repos
     else:

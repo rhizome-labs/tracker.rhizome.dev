@@ -3,12 +3,11 @@ from typing import Union
 
 from cachetools import TTLCache, cached
 from iconsdk.builder.call_builder import CallBuilder
-from iconsdk.exception import JSONRPCException
 from iconsdk.icon_service import IconService
 from iconsdk.providers.http_provider import HTTPProvider
 from requests.exceptions import ConnectionError
+
 from tracker_rhizome_dev import ENV
-from tracker_rhizome_dev.app.http_request import HttpReq
 from tracker_rhizome_dev.app.utils import to_int
 
 
@@ -54,25 +53,6 @@ class Icx:
                 continue
             except KeyboardInterrupt:
                 exit()
-
-    @classmethod
-    async def aiocall(cls, to: str, method: str, params={}, height=None):
-        try:
-            payload = {
-                "jsonrpc": "2.0",
-                "id": 1234,
-                "method": "icx_call",
-                "params": {
-                    "to": to,
-                    "dataType": "call",
-                    "data": {"method": method, "params": params, "height": height},
-                },
-            }
-            r = await HttpReq.post(f"{cls.ICON_API_ENDPOINT}/api/v3", json=payload)
-            data = r.json()
-            return data["result"]
-        except Exception as e:
-            print(e)
 
     #################
     # Stock Methods #

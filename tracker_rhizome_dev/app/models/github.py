@@ -6,6 +6,7 @@ from typing import List, Union
 import pymongo
 from beanie import Document, Indexed
 from pydantic import BaseModel, root_validator, validator
+
 from tracker_rhizome_dev import EXA
 from tracker_rhizome_dev.app.data.country_codes import CountryCodes
 from tracker_rhizome_dev.app.icx import Icx
@@ -70,7 +71,7 @@ class Db_GithubRepo(Document):
 
     @validator("owner_name")
     def validate_owner_name(cls, v: str):
-        return v.lower()
+        return v.casefold()
 
     class Settings:
         name = "githubRepos"
