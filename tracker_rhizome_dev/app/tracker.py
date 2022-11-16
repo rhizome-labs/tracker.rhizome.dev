@@ -135,14 +135,59 @@ class Tracker:
     @classmethod
     async def get_transactions(
         cls,
+        from_address: str = None,
+        to_address: str = None,
+        type: str = "transaction",
+        block_height: int = None,
+        start_block_height: int = None,
+        end_block_height: int = None,
+        method: str = None,
         limit: int = 25,
         skip: int = 0,
         sort: str = "desc",
         format: bool = True,
     ) -> list:
-        url = f"{cls.ICON_TRACKER_ENDPOINT}/transactions?limit={limit}&skip={skip}&sort={sort}&type=transaction"
+
+        # Build query string for origin address.
+        if from_address is None:
+            from_address_str = ""
+        else:
+            from_address_str = f"&from={from_address}"
+
+        # Build query string for destination address.
+        if to_address is None:
+            to_address_str = ""
+        else:
+            to_address_str = f"&to={to_address}"
+
+        # Build query string for block height.
+        if block_height is None:
+            block_height_str = ""
+        else:
+            block_height_str = f"&block_number={block_height}"
+
+        # Build query string for start block height.
+        if start_block_height is None:
+            start_block_height_str = ""
+        else:
+            start_block_height_str = f"&start_block_number={start_block_height}"
+
+        # Build query string for end block height.
+        if end_block_height is None:
+            end_block_height_str = ""
+        else:
+            end_block_height_str = f"&end_block_number={end_block_height}"
+
+        # Build query string for method.
+        if method is None:
+            method_str = ""
+        else:
+            method_str = f"&method={method}"
+
+        url = f"{cls.ICON_TRACKER_ENDPOINT}/transactions?limit={limit}&skip={skip}&sort={sort}&type={type}{from_address_str}{to_address_str}{block_height_str}{start_block_height_str}{end_block_height_str}{method_str}"
         r = await HttpReq.get(url)
         data = r.json()
+
         if format is True:
             transactions = [Transaction(**transaction) for transaction in data]
             return transactions

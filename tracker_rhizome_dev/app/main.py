@@ -2,8 +2,7 @@ import json
 import os
 
 from beanie import init_beanie
-from fastapi import (Depends, FastAPI, Form, Path, Query, Request, Response,
-                     status)
+from fastapi import Depends, FastAPI, Form, Path, Query, Request, Response, status
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -15,37 +14,41 @@ from tracker_rhizome_dev.app.dependencies import is_htmx_request
 from tracker_rhizome_dev.app.http_request import HttpReq
 from tracker_rhizome_dev.app.icx import Icx
 from tracker_rhizome_dev.app.models.balanced import (
-    Db_BalancedLoan, Db_BalancedPoolDynamicDataSnapshot,
-    Db_BalancedPoolStaticData)
-from tracker_rhizome_dev.app.models.github import (Db_GithubCommit,
-                                                   Db_GithubReleases,
-                                                   Db_GithubRepo)
-from tracker_rhizome_dev.app.models.icx import (Db_IcxBlock,
-                                                Db_IcxSicxBnusdQuote,
-                                                Db_RecentBlock,
-                                                Db_RecentTransaction,
-                                                Db_ValidatorNodeStatus)
-from tracker_rhizome_dev.app.regex import ICX_TX_HASH_REGEX
+    Db_BalancedLoan,
+    Db_BalancedPoolDynamicDataSnapshot,
+    Db_BalancedPoolStaticData,
+)
+from tracker_rhizome_dev.app.models.github import (
+    Db_GithubCommit,
+    Db_GithubReleases,
+    Db_GithubRepo,
+)
+from tracker_rhizome_dev.app.models.icx import (
+    Db_IcxBlock,
+    Db_IcxSicxBnusdQuote,
+    Db_RecentBlock,
+    Db_RecentTransaction,
+    Db_ValidatorNodeStatus,
+)
+from tracker_rhizome_dev.app.regex import ICX_ADDRESS_REGEX, ICX_TX_HASH_REGEX
+
 # Import API routes
 from tracker_rhizome_dev.app.routers.api.v1 import database as api_database
 from tracker_rhizome_dev.app.routers.api.v1 import icx as api_icx
+
 # Import app routes
 from tracker_rhizome_dev.app.routers.app import dapps as app_dapps
+
 # Import component routes
 from tracker_rhizome_dev.app.routers.components import address_book
-from tracker_rhizome_dev.app.routers.components import \
-    balanced as comp_balanced
+from tracker_rhizome_dev.app.routers.components import balanced as comp_balanced
 from tracker_rhizome_dev.app.routers.components import build as comp_build
-from tracker_rhizome_dev.app.routers.components import \
-    contracts as comp_contracts
-from tracker_rhizome_dev.app.routers.components import \
-    governance as comp_governance
+from tracker_rhizome_dev.app.routers.components import contracts as comp_contracts
+from tracker_rhizome_dev.app.routers.components import governance as comp_governance
 from tracker_rhizome_dev.app.routers.components import home as comp_home
 from tracker_rhizome_dev.app.routers.components import icx as comp_icx
-from tracker_rhizome_dev.app.routers.components import \
-    transaction as comp_transaction
-from tracker_rhizome_dev.app.routers.components import \
-    transactions as comp_transactions
+from tracker_rhizome_dev.app.routers.components import transaction as comp_transaction
+from tracker_rhizome_dev.app.routers.components import transactions as comp_transactions
 from tracker_rhizome_dev.app.tracker import Tracker
 from tracker_rhizome_dev.app.utils import format_number
 
@@ -122,7 +125,12 @@ app.include_router(
 )
 
 
-@app.get("/", status_code=status.HTTP_200_OK, response_class=HTMLResponse, tags=["app"])
+@app.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_class=HTMLResponse,
+    tags=["app"],
+)
 async def index(request: Request):
     return TEMPLATES.TemplateResponse(
         "home/index.html",
@@ -134,19 +142,17 @@ async def index(request: Request):
 
 
 @app.get(
-    "/address-book/",
+    "/address/{address}/",
     status_code=status.HTTP_200_OK,
-    response_class=HTMLResponse,
     tags=["app"],
 )
-async def get_address_book(request: Request):
-    return TEMPLATES.TemplateResponse(
-        "address_book/index.html",
-        {
-            "request": request,
-            "title": "Address Book",
-        },
-    )
+async def get_address(
+    request: Request,
+    address: str = Path(regex=ICX_ADDRESS_REGEX),
+):
+    address_details = await Tracker.get_address_details(address)
+    print(address_details)
+    return
 
 
 @app.get(
