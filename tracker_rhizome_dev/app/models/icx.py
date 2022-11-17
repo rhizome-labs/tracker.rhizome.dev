@@ -7,6 +7,7 @@ import pymongo
 import timeago
 from beanie import Document
 from pydantic import BaseModel, root_validator, validator
+
 from tracker_rhizome_dev import EXA
 from tracker_rhizome_dev.app.cps import Cps
 from tracker_rhizome_dev.app.data.addresses import Addresses
@@ -472,7 +473,6 @@ class Validator(BaseModel):
 
         # Set non-model variables.
         icx_usd_price = Decimal(values["icx_usd_price"])
-        validators_node_status = values["validators_node_status"]
         network_info = values["network_info"]
         total_power = Decimal(network_info["totalPower"]) / EXA
         i_global = Decimal(network_info["rewardFund"]["Iglobal"]) / EXA
@@ -496,12 +496,6 @@ class Validator(BaseModel):
 
         if values["address"] in cps_sponsors_record.keys():
             values["cps_sponsored_projects"] = cps_sponsors_record[values["address"]]
-
-        # Set validator ndoe status for validator.
-        try:
-            values["node_status"] = validators_node_status[values["address"]]
-        except KeyError:
-            values["node_status"] = False
 
         # Set bond ratio for validator.
         try:
