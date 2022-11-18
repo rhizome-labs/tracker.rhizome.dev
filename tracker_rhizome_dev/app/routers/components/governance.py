@@ -81,10 +81,6 @@ async def get_validators(
     validators = Gov.get_validators()
     network_info = Icx.get_network_info()
     icx_usd_price = Icx.get_icx_usd_price()
-    #    validators_node_status = {
-    #        validator.id: validator.status
-    #        for validator in (await Db_ValidatorNodeStatus.find_all().to_list())
-    #    }
     formatted_validators = [
         Validator(
             irep_update_block_height=validator["irepUpdateBlockHeight"],
@@ -96,7 +92,6 @@ async def get_validators(
             **validator,
             icx_usd_price=icx_usd_price,
             network_info=network_info,
-            # validators_node_status=validators_node_status,
         )
         for validator in validators["preps"]
     ]
