@@ -1,9 +1,6 @@
 # App Stuff
 .python-version
 
-# Docker
-Dockerfile
-
 #macOS Stuff
 .DS_Store
 
