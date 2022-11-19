@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from tracker_rhizome_dev import EXA
 from tracker_rhizome_dev.app.data.tokens import Tokens
 from tracker_rhizome_dev.app.http_request import HttpReq
 from tracker_rhizome_dev.app.utils import to_int
@@ -57,11 +58,11 @@ class BalancedApi:
         data = r.json()
         data["total_value_locked_usd"] = Decimal(
             to_int(data["total_value_locked_usd"])
-        ) / Decimal(10**18)
+        ) / Decimal(EXA)
         data["dex_value_locked_usd"] = Decimal(
             to_int(data["dex_value_locked_usd"])
-        ) / Decimal(10**18)
+        ) / Decimal(EXA)
         data["loans_value_locked_usd"] = Decimal(
             to_int(data["loans_value_locked_usd"])
-        ) / Decimal(10**18)
+        ) / Decimal(EXA)
         return data
