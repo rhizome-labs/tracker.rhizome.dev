@@ -43,4 +43,4 @@ processes = []
 
 [[statics]]
   guest_path = "/tracker_rhizome_dev/app/static"
-  url_prefix = "/static"
+  url_prefix = "/assets"
