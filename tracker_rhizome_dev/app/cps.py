@@ -17,10 +17,11 @@ class Cps(Icx):
         validators = [validator["address"] for validator in result]
         return validators
 
-    @classmethod
-    @cached(cache=TTLCache(maxsize=1, ttl=3600))
-    def get_sponsors_record(cls) -> dict:
-        result = cls.call(cls.CPS_CONTRACT, "get_sponsors_record")
-        for k, v in result.items():
-            result[k] = to_int(v)
-        return result
+
+#    @classmethod
+#    @cached(cache=TTLCache(maxsize=1, ttl=3600))
+#    def get_sponsors_record(cls) -> dict:
+#        result = cls.call(cls.CPS_CONTRACT, "get_sponsors_record")
+#        for k, v in result.items():
+#            result[k] = to_int(v)
+#        return result

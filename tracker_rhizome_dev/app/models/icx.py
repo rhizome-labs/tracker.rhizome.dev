@@ -469,7 +469,7 @@ class Validator(BaseModel):
     def root_validator(cls, values):
 
         cps_validators = Cps.get_cps_validators()
-        cps_sponsors_record = Cps.get_sponsors_record()
+        # cps_sponsors_record = Cps.get_sponsors_record()
 
         # Set non-model variables.
         icx_usd_price = Decimal(values["icx_usd_price"])
@@ -494,8 +494,8 @@ class Validator(BaseModel):
         else:
             values["cps"] = False
 
-        if values["address"] in cps_sponsors_record.keys():
-            values["cps_sponsored_projects"] = cps_sponsors_record[values["address"]]
+        # if values["address"] in cps_sponsors_record.keys():
+        #    values["cps_sponsored_projects"] = cps_sponsors_record[values["address"]]
 
         # Set bond ratio for validator.
         try:

@@ -100,10 +100,10 @@ async def get_validators(
         formatted_validators = sorted(
             formatted_validators, key=lambda x: x.bonded_ratio["default"]
         )
-    elif sort_by == "cps":
-        formatted_validators = sorted(
-            formatted_validators, key=lambda x: x.cps_sponsored_projects
-        )
+    #    elif sort_by == "cps":
+    #        formatted_validators = sorted(
+    #            formatted_validators, key=lambda x: x.cps_sponsored_projects
+    #        )
     elif sort_by == "delegation":
         formatted_validators = sorted(
             formatted_validators, key=lambda x: x.delegated["default"]
