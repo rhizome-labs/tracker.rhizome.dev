@@ -79,9 +79,24 @@ class Tracker:
             return data
 
     @classmethod
+    async def get_total_claimed_iscore(
+        cls,
+        address: str,
+        limit: int = 100,
+        skip: int = 0,
+    ) -> list:
+        url = f"{cls.ICON_TRACKER_ENDPOINT}/transactions?limit={limit}&skip={skip}&from={address}&method=claimIScore"
+        r = await HttpReq.get(url)
+        data = r.json()
+        return data
+
+    @classmethod
     async def get_contracts(
-        cls, limit: int = 100, skip: int = 0, token_standard: str = None
-    ):
+        cls,
+        limit: int = 100,
+        skip: int = 0,
+        token_standard: str = None,
+    ) -> list:
         if token_standard is None:
             url = f"{cls.ICON_TRACKER_ENDPOINT}/addresses/contracts?limit={limit}&skip={skip}"
         else:
@@ -92,7 +107,13 @@ class Tracker:
         return contracts
 
     @classmethod
-    async def get_logs(cls, address: str, method: str, limit: int = 100, skip: int = 0):
+    async def get_logs(
+        cls,
+        address: str,
+        method: str,
+        limit: int = 100,
+        skip: int = 0,
+    ) -> list:
         url = f"{cls.ICON_TRACKER_ENDPOINT}/logs/?limit={limit}&skip={skip}&address={address}&method={method}"
         r = await HttpReq.get(url)
         data = r.json()
@@ -109,7 +130,10 @@ class Tracker:
 
     @classmethod
     async def get_token_transfers(
-        cls, limit: int = 25, skip: int = 0, sort: str = "desc"
+        cls,
+        limit: int = 25,
+        skip: int = 0,
+        sort: str = "desc",
     ) -> list:
         url = f"{cls.ICON_TRACKER_ENDPOINT}/transactions/token-transfers?limit={limit}&skip={skip}&sort={sort}&type=transaction"
         r = await HttpReq.get(url)
