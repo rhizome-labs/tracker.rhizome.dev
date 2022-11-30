@@ -7,9 +7,11 @@ from tracker_rhizome_dev import ENV, TEMPLATES
 from tracker_rhizome_dev.app.balanced import Balanced
 from tracker_rhizome_dev.app.balanced_api import BalancedApi
 from tracker_rhizome_dev.app.http_request import HttpReq
-from tracker_rhizome_dev.app.models.balanced import (App_BalancedLiquidation,
-                                                     App_BalancedLoan,
-                                                     Db_BalancedLoan)
+from tracker_rhizome_dev.app.models.balanced import (
+    App_BalancedLiquidation,
+    App_BalancedLoan,
+    Db_BalancedLoan,
+)
 from tracker_rhizome_dev.app.utils import format_number, format_percentage
 
 router = APIRouter(prefix="/balanced")
@@ -45,6 +47,7 @@ async def get_liquidations(request: Request, page: int = 1):
         "balanced/components/liquidations.html",
         {"request": request, "liquidations": liquidations, "page": page},
     )
+
 
 @router.get("/loans/", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 async def get_loans(
@@ -154,9 +157,6 @@ async def get_pools(request: Request):
             pool["price_daily_change_percent"],
             format_percentage(pool["price_daily_change_percent"], display_sign=True),
         )
-        if pool["id"] == 5:
-            print(pool)
-
     return TEMPLATES.TemplateResponse(
         "balanced/components/pools.html",
         {"request": request, "pools": pools},

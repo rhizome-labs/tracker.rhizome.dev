@@ -19,7 +19,7 @@ async def get_address_overview(
     address: str = Path(regex=ICX_ADDRESS_REGEX),
 ):
     address_details = await Tracker.get_address_details(address)
-    print(address_details)
+
     if format == "json":
         pass
     else:
@@ -44,12 +44,8 @@ async def get_address_transactions(
     limit: int = Query(default=50, ge=25, le=100),
     refresh: bool = True,
 ):
-    print("AH!")
     skip = int((page - 1) * limit)
     transactions = await Tracker.get_address_transactions(address, limit, skip)
-
-    page = 1
-
     return TEMPLATES.TemplateResponse(
         "address/components/transactions.html",
         {

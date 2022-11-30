@@ -8,6 +8,7 @@ from decimal import Decimal
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Request, status
 from pymongo.errors import BulkWriteError, DuplicateKeyError
 from rich import inspect
+
 from tracker_rhizome_dev import (
     GENESIS_TIMESTAMP_S,
     GITHUB_IGNORED_REPO_IDS,
@@ -480,8 +481,6 @@ async def post_github_repos(
             # KeyError happens when a repo can't be found in 'repos_in_db_dict'. In that case, save to database.
             except KeyError:
                 db_write = await Db_GithubRepo.save(repo)
-                print(db_write)
-
         return
 
     try:
@@ -502,5 +501,4 @@ async def post_recent_transactions(request: Request):
     ]
     for transaction in recent_transactions:
         db_write = await transaction.save()
-        print(db_write)
     return
