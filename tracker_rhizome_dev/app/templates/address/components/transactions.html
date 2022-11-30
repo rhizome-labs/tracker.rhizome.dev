@@ -1,0 +1,122 @@
+<div _="on htmx:afterSettle remove .hidden from me" id="transactions"
+    class="hidden max-w-6xl mx-auto overflow-x-scroll border border-gray-800 divide-y divide-gray-800 rounded-lg"
+    hx-get="/components/address/transactions/{{ address }}/" hx-trigger="load delay:1s" hx-swap="outerHTML">
+    <header class="sm:px-4 flex items-center justify-between px-3 py-2 text-sm bg-gray-900"
+        id="transactions-table-header">
+        <h2 class="text-sm font-bold">Latest Tx</h2>
+        <nav class="sm:justify-end flex justify-between gap-4" aria-label="pagination">
+            {% if page > 1 %}
+            <button onclick="htmx.trigger('#transactions', 'htmx:abort')"
+                hx-get="/components/transactions/?page={{ page - 1}}&limit={{ limit }}&refresh={{ refresh|lower }}"
+                hx-trigger="click" hx-target="#transactions" type="button"
+                class="hover:underline text-sm font-bold">Previous</button>
+            {% endif %}
+            <button onclick="htmx.trigger('#transactions', 'htmx:abort')"
+                hx-get="/components/transactions/?page={{ page + 1}}&limit={{ limit }}&refresh={{ refresh|lower }}"
+                hx-trigger="click" hx-target="#transactions" type="button"
+                class="hover:underline text-sm font-bold">Next</button>
+        </nav>
+    </header>
+
+    <table id="transactions-table" class="w-full text-sm divide-y divide-gray-800">
+        <thead>
+            <tr class="text-sm text-left bg-black divide-x divide-gray-800">
+                <th scope="col" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                    TX Hash</th>
+                <th scope="col" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                    Block</th>
+                <th scope="col" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                    Date</th>
+                <th scope="col" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                    Transaction</th>
+                <th scope="col" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                    Value</th>
+                <th scope="col" class="whitespace-nowrap sm:px-4 px-3 py-2">
+                    Fee</th>
+            </tr>
+        </thead>
+        <tbody class="font-mono divide-y divide-gray-800">
+            {% for transaction in transactions %}
+            {% if (loop.index % 2) == 0 %}
+            {% set cell_bg = "bg-black" %}
+            {% elif (loop.index % 2) == 1 %}
+            {% set cell_bg = "bg-black" %}
+            {% endif %}
+            <tr class="divide-x divide-gray-800 {{ cell_bg }}">
+                <td class="whitespace-nowrap sm:px-4 w-8 px-3 py-1 text-gray-400"
+                    x-data="{ txHash: '{{ transaction.hash }}' }">
+                    {% if transaction.status == 0 %}
+                    <button x-clipboard="txHash"
+                        class="inline-block w-2.5 h-2.5 bg-red-600 border border-red-500 rounded-full mr-1">
+                    </button>
+                    {% elif transaction.status == 1 %}
+                    <button x-clipboard="txHash"
+                        class="inline-block w-2.5 h-2.5 bg-green-600 border border-green-500 rounded-full mr-1">
+                    </button>
+                    {% endif %}
+                    <a href="/transaction/{{ transaction.hash }}"
+                        class="text-cyan-500 hover:underline font-mono">{{ transaction.hash[:24] }}<span
+                            class="font-sans">...</span>
+                    </a>
+                </td>
+                <td class="whitespace-nowrap sm:px-4 w-8 px-3 py-1 text-gray-400">
+                    <span>{{ transaction.block_number.formatted }}</span>
+                </td>
+                <td class="whitespace-nowrap sm:px-4 w-8 px-3 py-1 text-gray-400">
+                    <span>{{ transaction.block_timestamp.formatted }}</span>
+                </td>
+                <td class="whitespace-nowrap sm:px-4 px-3 py-1 text-gray-400">
+                    {% if transaction.from_address.formatted == "system" %}
+                    <span>system</span>
+                    {% elif transaction.from_address.formatted|length == 42 %}
+                    <a href="/{{ transaction.from_address.type }}/{{ transaction.from_address.default }}/"
+                        class="hover:underline text-cyan-500"><span
+                            class="font-mono">{{ transaction.from_address.default[:20] }}</span><span
+                            class="font-sans">...</span></a>
+                    {% else %}
+                    <a href="/{{ transaction.from_address.type }}/{{ transaction.from_address.default }}/"
+                        class="hover:underline text-cyan-500">{{ transaction.from_address.formatted }}</a>
+                    {% endif %}
+                    <span class="font-bold">&rarr;</span>
+                    {% if transaction.to_address.formatted == "system" %}
+                    <span>system</span>
+                    {% elif transaction.to_address.formatted|length == 42 %}
+                    <a href="/{{ transaction.to_address.type }}/{{ transaction.to_address.default }}/"
+                        class="hover:underline text-cyan-500"><span
+                            class="font-mono">{{ transaction.to_address.default[:20] }}</span><span
+                            class="font-sans">...</span></a>
+                    {% else %}
+                    <a href="/{{ transaction.to_address.type }}/{{ transaction.to_address.default }}/"
+                        class="hover:underline text-cyan-500">{{ transaction.to_address.formatted }}</a>
+                    {% endif %}
+                    {% if transaction.method is not none %}
+                    <span class="font-mono text-xs">({{ transaction.method }})</span>
+                    {% endif %}
+                </td>
+                <td class="whitespace-nowrap sm:px-4 w-8 px-3 py-1 text-gray-400">
+                    <span>{{ transaction.value.formatted }} ICX</span>
+                </td>
+                <td class="whitespace-nowrap sm:px-4 w-8 px-3 py-1 text-gray-400">
+                    <span>{{ transaction.transaction_fee.formatted }} ICX</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <footer id="transactions-table-footer"
+        class="outline outline-1 outline-gray-800 sm:px-4 flex items-center justify-end px-3 py-2 text-sm bg-gray-900">
+        <nav class="sm:justify-end flex justify-between gap-4" aria-label="pagination">
+            {% if page > 1 %}
+            <button onclick="htmx.trigger('#transactions', 'htmx:abort')"
+                hx-get="/components/transactions/?page={{ page - 1}}&limit={{ limit }}&refresh={{ refresh|lower }}"
+                hx-trigger="click" hx-target="#transactions" type="button"
+                class="hover:underline text-sm font-bold">Previous</button>
+            {% endif %}
+            <button onclick="htmx.trigger('#transactions', 'htmx:abort')"
+                hx-get="/components/transactions/?page={{ page + 1}}&limit={{ limit }}&refresh={{ refresh|lower }}"
+                hx-trigger="click" hx-target="#transactions" type="button"
+                class="hover:underline text-sm font-bold">Next</button>
+        </nav>
+    </footer>
+</div>

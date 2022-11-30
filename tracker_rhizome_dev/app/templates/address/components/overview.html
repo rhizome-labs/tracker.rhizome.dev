@@ -1,0 +1,42 @@
+<div class="flex flex-col max-w-6xl gap-4 mx-auto">
+
+    <header>
+        <div class="flex items-center gap-1">
+            <img src="/assets/tokens/icx.png" class="w-12 h-12" />
+            <h1 class="text-3xl font-bold">{{ data.address }}</h1>
+        </div>
+    </header>
+
+    <div class="w-full overflow-x-scroll">
+        <table class="w-full border border-gray-800 rounded-lg table-auto">
+            <tbody class="text-left divide-y divide-gray-800">
+
+                <!-- ICX Balance -->
+                <tr class="divide-x divide-gray-800">
+                    <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Balance</td>
+                    <td class="md:px-4 px-3 py-2 font-mono bg-black">{{ data.balance }} ICX</td>
+                </tr>
+
+                <!-- Transaction Count -->
+                <tr class="divide-x divide-gray-800">
+                    <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Total Transactions</td>
+                    <td class="md:px-4 px-3 py-2 font-mono bg-black">{{ data.transaction_count }}</td>
+                </tr>
+
+                <!-- Token Transfer -->
+                <tr class="divide-x divide-gray-800">
+                    <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Token Transfers</td>
+                    <td class="md:px-4 px-3 py-2 font-mono bg-black">{{ data.token_transfer_count }}</td>
+                </tr>
+
+                <!-- Token Transfer -->
+                <tr class="divide-x divide-gray-800">
+                    <td class="whitespace-nowrap md:px-4 px-3 py-2 bg-black">Internal Transactions</td>
+                    <td class="md:px-4 px-3 py-2 font-mono bg-black">{{ data.transaction_internal_count }}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

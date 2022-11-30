@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Query, Request, status
 from fastapi.responses import HTMLResponse
+
 from tracker_rhizome_dev import ENV, TEMPLATES
 from tracker_rhizome_dev.app.data.addresses import Addresses
 from tracker_rhizome_dev.app.http_request import HttpReq

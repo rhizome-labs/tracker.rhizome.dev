@@ -1,4 +1,4 @@
-FROM python:3.11.0
+FROM python:3.10.8-slim-bullseye
 
 # Create working directory
 WORKDIR /code
@@ -7,6 +7,8 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 
 # Install Python dependencies
+RUN pip install --upgrade pip
+RUN pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # Copy application files

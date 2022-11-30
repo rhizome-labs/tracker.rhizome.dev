@@ -40,7 +40,7 @@ from tracker_rhizome_dev.app.routers.api.v1 import icx as api_icx
 from tracker_rhizome_dev.app.routers.app import dapps as app_dapps
 
 # Import component routes
-from tracker_rhizome_dev.app.routers.components import address_book
+from tracker_rhizome_dev.app.routers.components import address, address_book
 from tracker_rhizome_dev.app.routers.components import balanced as comp_balanced
 from tracker_rhizome_dev.app.routers.components import build as comp_build
 from tracker_rhizome_dev.app.routers.components import contracts as comp_contracts
@@ -69,6 +69,12 @@ app.include_router(api_icx.router, prefix="/api/v1", tags=["api"])
 app.include_router(app_dapps.router, tags=["app"])
 
 # Component Routes
+app.include_router(
+    address.router,
+    prefix="/components",
+    tags=["components"],
+    dependencies=[Depends(is_htmx_request)],
+)
 app.include_router(
     address_book.router,
     prefix="/components",
@@ -149,10 +155,21 @@ async def index(request: Request):
 async def get_address(
     request: Request,
     address: str = Path(regex=ICX_ADDRESS_REGEX),
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=50, ge=25, le=100),
+    refresh: bool = True,
 ):
-    address_details = await Tracker.get_address_details(address)
-    print(address_details)
-    return
+    return TEMPLATES.TemplateResponse(
+        "address/index.html",
+        {
+            "request": request,
+            "title": f"{address[:8]}... | RHIZOME Tracker",
+            "address": address,
+            "page": page,
+            "limit": limit,
+            "refresh": refresh,
+        },
+    )
 
 
 @app.get(

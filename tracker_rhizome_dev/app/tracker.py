@@ -29,6 +29,24 @@ class Tracker:
         return data
 
     @classmethod
+    async def get_address_transactions(
+        cls,
+        address: str,
+        limit: int = 25,
+        skip: int = 0,
+        format: bool = True,
+    ):
+        url = f"{cls.ICON_TRACKER_ENDPOINT}/transactions/address/{ address }/?limit={limit}&skip={skip}"
+        r = await HttpReq.get(url)
+        transactions = r.json()
+
+        if format is True:
+            transactions = [Transaction(**transaction) for transaction in transactions]
+            return transactions
+        else:
+            return transactions
+
+    @classmethod
     async def get_block_from_timestamp(cls, timestamp: int) -> int:
         """
         Returns block height for the provided timestamp.
