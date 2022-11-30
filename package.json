@@ -1,0 +1,25 @@
+{
+  "name": "tracker.rhizome.dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhizome-labs/tracker.rhizome.dev.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rhizome-labs/tracker.rhizome.dev/issues"
+  },
+  "homepage": "https://github.com/rhizome-labs/tracker.rhizome.dev#readme",
+  "dependencies": {
+    "tailwindcss": "^3.2.4"
+  }
+}

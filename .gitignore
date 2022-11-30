@@ -1,6 +1,7 @@
 # App Stuff
 .python-version
 *style.css
+node_modules/
 
 #macOS Stuff
 .DS_Store

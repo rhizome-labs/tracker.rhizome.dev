@@ -19,7 +19,7 @@ RUN apt install npm -y
 COPY ./tracker_rhizome_dev /code/tracker_rhizome_dev
 
 # Generate CSS
-RUN npm install
+RUN npm install --prefix /code
 RUN npx tailwindcss -i /code/tracker_rhizome_dev/app/css/main.css -o /code/tracker_rhizome_dev/app/static/style.css --minify
 
 # Start application
