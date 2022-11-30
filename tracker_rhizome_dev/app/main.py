@@ -424,9 +424,9 @@ async def get_404(request: Request):
 async def custom_exception_handler(request: Request, exc: StarletteHTTPException):
     if exc.status_code == 404:
         if str(request.url.path).startswith("/assets/validators/"):
-            return RedirectResponse("/assets/validators/validator.png")
+            return RedirectResponse("/assets/validators/validator_128px.png")
         elif str(request.url.path).startswith("/assets/tokens/"):
-            return RedirectResponse("/assets/validators/validator.png")
+            return RedirectResponse("/assets/validators/validator_128px.png")
         else:
             return TEMPLATES.TemplateResponse(
                 "errors/404.html",
