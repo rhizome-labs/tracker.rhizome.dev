@@ -31,15 +31,9 @@ from tracker_rhizome_dev.app.models.icx import (
     Db_ValidatorNodeStatus,
 )
 from tracker_rhizome_dev.app.regex import ICX_ADDRESS_REGEX, ICX_TX_HASH_REGEX
-
-# Import API routes
 from tracker_rhizome_dev.app.routers.api.v1 import database as api_database
 from tracker_rhizome_dev.app.routers.api.v1 import icx as api_icx
-
-# Import app routes
 from tracker_rhizome_dev.app.routers.app import dapps as app_dapps
-
-# Import component routes
 from tracker_rhizome_dev.app.routers.components import address, address_book
 from tracker_rhizome_dev.app.routers.components import balanced as comp_balanced
 from tracker_rhizome_dev.app.routers.components import build as comp_build
@@ -47,6 +41,7 @@ from tracker_rhizome_dev.app.routers.components import contracts as comp_contrac
 from tracker_rhizome_dev.app.routers.components import governance as comp_governance
 from tracker_rhizome_dev.app.routers.components import home as comp_home
 from tracker_rhizome_dev.app.routers.components import icx as comp_icx
+from tracker_rhizome_dev.app.routers.components import tools as comp_tools
 from tracker_rhizome_dev.app.routers.components import transaction as comp_transaction
 from tracker_rhizome_dev.app.routers.components import transactions as comp_transactions
 from tracker_rhizome_dev.app.tracker import Tracker
@@ -113,6 +108,12 @@ app.include_router(
 )
 app.include_router(
     comp_icx.router,
+    prefix="/components",
+    tags=["components"],
+    dependencies=[Depends(is_htmx_request)],
+)
+app.include_router(
+    comp_tools.router,
     prefix="/components",
     tags=["components"],
     dependencies=[Depends(is_htmx_request)],

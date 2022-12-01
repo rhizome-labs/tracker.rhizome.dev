@@ -214,17 +214,143 @@ async def insert_validators_node_status():
 async def insert_github_commits(
     request: Request,
     background_tasks: BackgroundTasks,
-    start_timestamp: int = None,
+    start_timestamp: int = 1640995200,
     end_timestamp: int = None,
-    owner_name: str = None,
 ):
     """
     Fetches GitHub commits for tracked repositories and inserts them into a MongoDB database.
     """
 
+    # Initialize Github class.
+    github = Github()
+
+    # Get current time.
     dt_now = datetime.utcnow().replace(microsecond=0, second=0)
 
+    # Set end timestamp to now if not provided.
+    if end_timestamp is None:
+        end_timestamp = dt_now.timestamp()
+
+    # Get all repos from the database.
     repos = await Db_GithubRepo.find_all().to_list()
+
+    # Filter out ignored repos
+    repos = [repo for repo in repos if repo.id not in GITHUB_IGNORED_REPO_IDS]
+
+    for repo in repos[:1]:
+
+        # Query the database for existing commits in this repo
+        commits_in_db = await Db_GithubCommit.find(
+            Db_GithubCommit.owner_name == repo.owner_name,
+            Db_GithubCommit.repo_name == repo.name,
+            Db_GithubCommit.date >= datetime.utcfromtimestamp(start_timestamp),
+            Db_GithubCommit.date <= datetime.utcfromtimestamp(end_timestamp),
+        ).to_list()
+
+        commits_in_db_count = len(commits_in_db)
+
+        print(f"There are {commits_in_db_count} commits for {repo.name} in the database.")  # fmt: skip
+
+        commits_on_github_count = await github.get_commits_count(
+            repo.owner_name,
+            repo.name,
+            start_timestamp,
+            end_timestamp,
+        )
+
+        print(f"There are {commits_on_github_count} commits for {repo.name} on GitHub.")  # fmt: skip
+
+        # Process commits if the number of commits on GitHub
+        # is not equal to the number of commits in the database
+        if commits_in_db_count != commits_on_github_count:
+
+            # Initialize array to hold commits
+            commits = []
+
+            print(f"Processing {repo.owner_name}-{repo.name}")
+
+            # Get GitHub commits for current page iteration.
+            repo_commits = await github.get_commits(
+                owner_name=repo.owner_name,
+                repo_name=repo.name,
+                start_timestamp=start_timestamp,
+                end_timestamp=end_timestamp,
+            )
+
+            # Break out of this repo loop if there are no commits.
+            if repo_commits is None:
+                break
+            else:
+                # Loop through repo's commits and do some processing.
+                for commit in repo_commits:
+                    # Get the commit details for a commit.
+                    commit_details = await github.get_commit_details(
+                        repo.owner_name, repo.name, commit["sha"]
+                    )
+
+                    # Process commit author.
+                    if commit_details["author"] is None:
+                        author_username = None
+                        author_id = 0
+                    else:
+                        author_username = commit_details["author"]["login"]
+                        author_id = commit_details["author"]["id"]
+
+                    # Process commit committer.
+                    if commit_details["committer"] is None:
+                        committer_username = None
+                        committer_id = 0
+                    else:
+                        committer_username = commit_details["committer"]["login"]  # fmt: skip
+                        committer_id = commit_details["author"]["id"]
+
+                print(commit)
+
+    #                        except:
+    #                            print(commit)
+    #                            commits.append(
+    #                                Db_GithubCommit(
+    #                                    id=commit_details["sha"],
+    #                                    date=commit_details["commit"]["committer"]["date"],
+    #                                    owner_name=repo.owner_name,
+    #                                    repo_id=repo.id,
+    #                                    repo_name=repo.name,
+    #                                    author_email=commit_details["commit"]["author"][
+    #                                        "email"
+    #                                    ],
+    #                                    author_id=author_id,
+    #                                    author_name=commit_details["commit"]["author"][
+    #                                        "name"
+    #                                    ],
+    #                                    author_username=author_username,
+    #                                    committer_email=commit_details["commit"][
+    #                                        "committer"
+    #                                    ]["email"],
+    #                                    committer_id=committer_id,
+    #                                    committer_name=commit_details["commit"][
+    #                                        "committer"
+    #                                    ]["name"],
+    #                                    committer_username=committer_username,
+    #                                    message=commit_details["commit"]["message"],
+    #                                    changes_additions=commit_details["stats"][
+    #                                        "additions"
+    #                                    ],
+    #                                    changes_deletions=commit_details["stats"][
+    #                                        "deletions"
+    #                                    ],
+    #                                    changes_total=commit_details["stats"]["total"],
+    #                                )
+    #                            )
+    #
+    #                    print(f"Writing {len(commits)} to database...")
+    #                    for commit in commits:
+    #                        db_write = await commit.save()
+    #                        print(db_write)
+    #
+    #                    page += 1
+    #        else:
+    #            print("Commits on GitHub and database are equal. Skipping this repo...")
+    #            continue
 
     return
 

@@ -164,8 +164,43 @@ class Tracker:
         return transaction
 
     @classmethod
-    async def get_transaction_logs(cls, tx_hash: str):
-        url = f"{cls.ICON_TRACKER_ENDPOINT}/logs?transaction_hash={tx_hash}"
+    async def get_transaction_logs(
+        cls,
+        address: str = None,
+        tx_hash: str = None,
+        method: str = None,
+        start_block: int = None,
+        end_block: int = None,
+        limit: int = 100,
+        skip: int = 0,
+    ):
+
+        if address is None:
+            address_arg = ""
+        else:
+            address_arg = f"&address={address}"
+
+        if start_block is None:
+            start_block_arg = ""
+        else:
+            start_block_arg = f"&start_block={start_block}"
+
+        if end_block is None:
+            end_block_arg = ""
+        else:
+            end_block_arg = f"&end_block={end_block}"
+
+        if method is None:
+            method_arg = ""
+        else:
+            method_arg = f"&method={method}"
+
+        if tx_hash is None:
+            tx_hash_arg = ""
+        else:
+            tx_hash_arg = f"&transaction_hash={tx_hash}"
+
+        url = f"{cls.ICON_TRACKER_ENDPOINT}/logs?limit={limit}&skip={skip}{address_arg}{tx_hash_arg}{method_arg}{start_block_arg}{end_block_arg}"
         r = await HttpReq.get(url)
         try:
             data = r.json()
@@ -192,41 +227,41 @@ class Tracker:
 
         # Build query string for origin address.
         if from_address is None:
-            from_address_str = ""
+            from_address_arg = ""
         else:
-            from_address_str = f"&from={from_address}"
+            from_address_arg = f"&from={from_address}"
 
         # Build query string for destination address.
         if to_address is None:
-            to_address_str = ""
+            to_address_arg = ""
         else:
-            to_address_str = f"&to={to_address}"
+            to_address_arg = f"&to={to_address}"
 
         # Build query string for block height.
         if block_height is None:
-            block_height_str = ""
+            block_height_arg = ""
         else:
-            block_height_str = f"&block_number={block_height}"
+            block_height_arg = f"&block_number={block_height}"
 
         # Build query string for start block height.
         if start_block_height is None:
-            start_block_height_str = ""
+            start_block_height_arg = ""
         else:
-            start_block_height_str = f"&start_block_number={start_block_height}"
+            start_block_height_arg = f"&start_block_number={start_block_height}"
 
         # Build query string for end block height.
         if end_block_height is None:
-            end_block_height_str = ""
+            end_block_height_arg = ""
         else:
-            end_block_height_str = f"&end_block_number={end_block_height}"
+            end_block_height_arg = f"&end_block_number={end_block_height}"
 
         # Build query string for method.
         if method is None:
-            method_str = ""
+            method_arg = ""
         else:
-            method_str = f"&method={method}"
+            method_arg = f"&method={method}"
 
-        url = f"{cls.ICON_TRACKER_ENDPOINT}/transactions?limit={limit}&skip={skip}&sort={sort}&type={type}{from_address_str}{to_address_str}{block_height_str}{start_block_height_str}{end_block_height_str}{method_str}"
+        url = f"{cls.ICON_TRACKER_ENDPOINT}/transactions?limit={limit}&skip={skip}&sort={sort}&type={type}{from_address_arg}{to_address_arg}{block_height_arg}{start_block_height_arg}{end_block_height_arg}{method_arg}"
         r = await HttpReq.get(url)
         data = r.json()
 
