@@ -7,6 +7,7 @@ from httpx import HTTPStatusError
 
 from tracker_rhizome_dev import ENV
 from tracker_rhizome_dev.app.http_request import HttpReq
+from tracker_rhizome_dev.app.models.github import Db_GithubCommit
 
 
 class Github:
@@ -69,7 +70,7 @@ class Github:
         start_timestamp: int = None,
         end_timestamp: int = None,
         per_page: int = 100,
-    ) -> Union[list, None]:
+    ) -> list | None:
         """
         Returns a list of commits for a GitHub repository.
         """

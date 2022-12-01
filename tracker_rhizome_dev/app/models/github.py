@@ -22,11 +22,9 @@ class Db_GithubCommit(Document):
     author_email: str
     author_id: int = 0
     author_name: str
-    author_username: Union[str, None]
     committer_email: str
     committer_id: int = 0
     committer_name: str
-    committer_username: Union[str, None]
     message: Indexed(str)
     changes_additions: int
     changes_deletions: int
