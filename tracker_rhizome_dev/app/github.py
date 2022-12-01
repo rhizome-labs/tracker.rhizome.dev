@@ -189,11 +189,3 @@ class Github:
             end_timestamp_str = ""
 
         return f"{start_timestamp_str}{end_timestamp_str}"
-
-
-import asyncio
-
-github = Github()
-
-test = asyncio.run(github.get_commits("rhizome-labs", "icon-cli"))
-print(test)
